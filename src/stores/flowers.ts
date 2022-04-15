@@ -16,10 +16,10 @@ export const flowersStore = defineStore({
   actions: {
     async getFlowers() {
       try {
-        const { data } = await axios.get(
+        const response = await axios.get(
           `${import.meta.env.VITE_BASIC_PATH}/flowers`
         );
-        this.flowers = data;
+        this.flowers = response.data.flowers;
         console.log(
           "%c  data flowers==> ",
           "color:yellow;font-size:12px;",
