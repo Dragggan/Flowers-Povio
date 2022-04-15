@@ -1,20 +1,19 @@
 import { defineStore } from "pinia";
+import { authStore } from "../stores/authStore";
 import axios from "axios";
 
 export const formStore = defineStore({
   id: "formStore",
   state: () => ({
-    name: "Test Dragan`",
-    lastname: "aadaaaa",
-    date: "22/09/1987",
-    email: "dfhfghjfghggfd@gmail.com",
-    password: "12345677d88",
+    name: "",
+    lastname: "",
+    date: "",
+    email: "",
+    password: "",
     error: "",
-    token: "",
+    // token: "",
   }),
-  getters: {
-    tokenGetter: (state) => state.token,
-  },
+  getters: {},
   actions: {
     async createAccount() {
       try {
@@ -28,14 +27,14 @@ export const formStore = defineStore({
             date_of_birth: this.date,
           }
         );
-        this.token = response.data.auth_token;
+        // this.token = response.data.auth_token;
+        const auth = authStore();
+        auth.settokentest(response.data.auth_token);
         localStorage.setItem("token", response.data.auth_token);
       } catch (error) {
         this.error = error as string;
       }
-    },
-    setTokenFromLocalStorage(data: string) {
-      this.token = data;
+      // return this.token;
     },
   },
 });

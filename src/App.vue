@@ -3,11 +3,12 @@ import { RouterLink, RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { modalStore } from "./stores/modal";
 import { storeToRefs } from "pinia";
-import { formStore } from "./stores/formStore";
+import { authStore } from "./stores/authStore";
 import Modal from "@/components/Modal.vue";
 
-const form = formStore();
-const { tokenGetter } = storeToRefs(form);
+const auth = authStore();
+const { tokenGetter } = storeToRefs(auth);
+
 const openModal = (): void => {
   let isModalOpen = modalStore();
   isModalOpen.isModalOpen();
@@ -16,7 +17,7 @@ const openModal = (): void => {
 onMounted(() => {
   let token: string | null = localStorage.getItem("token");
   if (token) {
-    form.setTokenFromLocalStorage(token);
+    auth.setTokenFromLocalStorage(token);
   }
 });
 </script>
@@ -24,13 +25,11 @@ onMounted(() => {
 <template>
   <Modal />
   <nav
-    class="flex justify-around items-center content-center h-20"
-    :style="{ border: 'solid black 1px' }"
+    class="flex justify-between m-auto items-center content-center h-20 custom-width"
   >
-    <div class="flex justify-center content-center absolute">
+    <div>
       <img src="./assets/images/old.png" alt="Flowr Logo" />
     </div>
-    <div class="modal_container"></div>
     <div>
       <RouterLink to="/"
         ><span class="text-custom-1 font-color mx-3">Flowers</span></RouterLink
@@ -44,7 +43,7 @@ onMounted(() => {
       <button
         v-if="!tokenGetter"
         class="text-pink-button mx-3"
-        @click="openModal('loginModal')"
+        @click="openModal()"
       >
         Login
       </button>
@@ -57,11 +56,14 @@ onMounted(() => {
       <div v-else></div>
     </div>
   </nav>
-  <!-- <RouterView /> -->
+  <RouterView />
 </template>
 <style>
 @import "@/assets/reset.css";
 body {
   background-color: white !important;
+}
+.custom-width {
+  width: 64.6%;
 }
 </style>

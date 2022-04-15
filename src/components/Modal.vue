@@ -47,6 +47,7 @@
                       type="text"
                       placeholder=" First Name"
                       v-model="form.name"
+                      v-if="!form.tokenGetter"
                     />
                   </div>
                   <div class="w-full md:w-1/2 px-3">
@@ -56,6 +57,7 @@
                       type="text"
                       placeholder="Last Name"
                       v-model="form.lastname"
+                      v-if="!form.tokenGetter"
                     />
                   </div>
                 </div>
@@ -67,6 +69,7 @@
                       type="date"
                       placeholder="Date of birth"
                       v-model="form.date"
+                      v-if="!form.tokenGetter"
                     />
                     <p class="text-gray-600 text-xs italic"></p>
                   </div>
@@ -102,7 +105,11 @@
                   :class="{ 'bg-gray-200': isDisabled }"
                   @click="createAccount"
                 >
-                  Create Account
+                  {{
+                    form.tokenGetter
+                      ? "Login to your Account"
+                      : "Create Account"
+                  }}
                 </button>
               </div>
             </div>
