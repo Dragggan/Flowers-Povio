@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import Modal from "@/components/Modal.vue";
+import { modalStore } from "./stores/modal";
+
+const openModal = (type: string): void => {
+  let isModalOpen = modalStore();
+  isModalOpen.openModal(type);
+};
 </script>
 
 <template>
@@ -11,21 +18,19 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterLink to="/"><span class="text-custom-1 font-color mx-3">Flowers</span></RouterLink>
       <RouterLink to="/latestsightings"><span class="font-color mx-3">Latest Sightings</span></RouterLink>
       <RouterLink to="/favorites"><span class="font-color mx-3">Favorites</span></RouterLink>
-      <button v-if="true" class="text-pink-button mx-3">Login</button>
+      <button v-if="true" class="text-pink-button mx-3" @click="openModal('loginModal')">Login</button>
       <button v-if="true" class="bg-pink-button hover:pink-button-hover text-white rounded-2xl py-2 px-4 mx-3">
         New Account
       </button>
     </div>
   </nav>
   <RouterView />
+  <component :is="Modal" :type="activeModal" :isOpen="isOpen"></component>
 </template>
 <style>
 @import "@/assets/base.css";
 @import "@/assets/reset.css";
 body {
-  background-color: aliceblue !important;
-}
-.font-color {
-  color: #949ea0;
+  background-color: black !important;
 }
 </style>
