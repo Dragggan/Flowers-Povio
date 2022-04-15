@@ -13,16 +13,8 @@ module.exports = {
     "vue/setup-compiler-macros": true,
   },
   rules: {
-    "linebreak-style": 0,
     eqeqeq: "off",
     curly: "error",
     quotes: ["error", "double"],
-    "max-len": [
-      "error",
-      {
-        code: 140,
-        ignoreUrls: true,
-      },
-    ],
   },
 };
