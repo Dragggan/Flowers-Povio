@@ -33,8 +33,10 @@
                 as="h3"
                 class="text-lg font-medium leading-6 text-gray-900"
               >
-                Create an Account TODO
                 <span @click="closeModal" class="float-right mx-3">X</span>
+                <div class="my-4 text-center">
+                  {{ form.tokenGetter ? "Welcome Back" : "Create an Account" }}
+                </div>
               </DialogTitle>
               <form class="w-full max-w-lg">
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -132,8 +134,9 @@ const isOpen = ref(true);
 
 // all fields are disabled
 const isDisabled = computed(() => {
-  const { name, lastname, password, email, date } = form;
-  return !(name && lastname && password && email && date);
+  // const { name, lastname, password, email, date } = form;
+  // return !(name && lastname && password && email && date);
+  return false;
 });
 
 // subscribing to the store for show/hide modal
@@ -149,5 +152,6 @@ function closeModal() {
 function createAccount() {
   isOpen.value = false;
   store.isModalClosed();
+  form.createAccount();
 }
 </script>

@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import { onMounted } from "vue";
 import { modalStore } from "./stores/modal";
-import Modal from "./components/Modal.vue";
+import { storeToRefs } from "pinia";
+import { formStore } from "./stores/formStore";
+import Modal from "@/components/Modal.vue";
 
-const openModal = (type: string): void => {
+const form = formStore();
+const { tokenGetter } = storeToRefs(form);
+const openModal = (): void => {
   let isModalOpen = modalStore();
   isModalOpen.isModalOpen();
 };
+
+onMounted(() => {
+  let token: string | null = localStorage.getItem("token");
+  if (token) {
+    form.setTokenFromLocalStorage(token);
+  }
+});
 </script>
 
 <template>
@@ -30,18 +42,19 @@ const openModal = (type: string): void => {
         ><span class="font-color mx-3">Favorites</span></RouterLink
       >
       <button
-        v-if="true"
+        v-if="!tokenGetter"
         class="text-pink-button mx-3"
         @click="openModal('loginModal')"
       >
         Login
       </button>
       <button
-        v-if="true"
+        v-if="!tokenGetter"
         class="bg-pink-button hover:pink-button-hover text-white rounded-2xl py-2 px-4 mx-3"
       >
         New Account
       </button>
+      <div v-else></div>
     </div>
   </nav>
   <!-- <RouterView /> -->
