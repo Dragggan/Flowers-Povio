@@ -133,7 +133,7 @@
   </TransitionRoot>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, computed } from "vue";
 import {
   TransitionRoot,

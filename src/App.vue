@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import { computed } from "vue";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { modalStore } from "./stores/modal";
 import { authStore } from "./stores/authStore";
 import Modal from "@/components/Modal.vue";
