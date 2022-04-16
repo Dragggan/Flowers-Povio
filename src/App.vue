@@ -32,7 +32,6 @@ onMounted(() => {
   <Modal />
   <nav
     class="flex justify-between m-auto items-center content-center h-20 custom-width"
-    :style="{ border: 'solid black 1px' }"
   >
     <div>
       <img src="./assets/images/old.png" alt="Flowr Logo" />

@@ -4,6 +4,7 @@ import axios from "axios";
 interface FlowersApi {
   flowers: [] | null;
   error?: string | null;
+  searchFlowers: string;
   loading: boolean;
 }
 
@@ -13,19 +14,40 @@ export const flowersStore = defineStore({
     flowers: [],
     error: null,
     loading: false,
+    searchFlowers: "",
   }),
   getters: {
     getAllFlowers: (state) => state.flowers,
   },
   actions: {
     async getFlowers() {
+      let response;
       try {
         this.loading = true;
-        const response = await axios.get(`${import.meta.env.VITE_BASIC_PATH}/flowers`);
+        // searching for flowers
+
+        // without search, all flowers
+        response = await axios.get(
+          `${import.meta.env.VITE_BASIC_PATH}/flowers`
+        );
         this.flowers = response.data.flowers;
-        console.log("%c  data flowers==> ", "color:yellow;font-size:12px;", this.flowers);
       } catch (error) {
-        console.log("%c  error==> ", "color:red;font-size:12px;", error);
+        this.error = error as string;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async flowerSearch(value: string) {
+      let response;
+      try {
+        this.loading = true;
+        response = await axios.get(
+          `${import.meta.env.VITE_BASIC_PATH}/flowers/search`,
+          { params: { query: value } }
+        );
+        this.flowers = [];
+        this.flowers = response.data.flowers;
+      } catch (error) {
         this.error = error as string;
       } finally {
         this.loading = false;

@@ -1,5 +1,5 @@
 <template>
-  <div>Favorites</div>
+  <h1>Under Constructions</h1>
 </template>
 
 <script setup lang="ts"></script>

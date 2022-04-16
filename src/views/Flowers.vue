@@ -1,9 +1,29 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { flowersStore } from "../stores/flowers";
 import { storeToRefs } from "pinia";
+import Spinner from "@/components/Spinner.vue";
 
-const { flowers, loading, error } = storeToRefs(flowersStore());
+const { flowers, loading, error, searchFlowers } = storeToRefs(flowersStore());
+
+const search = ref("");
+
+// subscribing to the store for flower search
+let flower = flowersStore();
+
+watch(
+  () => search.value,
+  () => {
+    flower.flowerSearch(search.value);
+  }
+);
+
+// flower.$subscribe((mutation) => {
+//   let searchForFlowers = mutation.events.target.searchFlowers;
+//   if (searchForFlowers) {
+
+//   }
+// });
 
 //  Hooks
 onMounted(async () => {
@@ -14,12 +34,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <p v-if="loading">Loading posts...</p>
-  <p v-if="error">{{ error }}</p>
-  <div
-    class="container w-screen-xl flex flex-col m-auto"
-    :style="{ border: 'solid green 2px' }"
-  >
+  <Spinner v-if="loading" />
+  <p v-if="error" class="mt-5 flex w-full justify-center">
+    {{ error }}
+  </p>
+  <div v-else class="container w-screen-xl flex flex-col m-auto mb-20">
     <div
       class="backgroud_image w-full h-120 flex justify-center items-center flex flex-col"
     >
@@ -30,23 +49,35 @@ onMounted(async () => {
       <input
         type="text"
         placeholder="Looking for something specific?"
-        class="top-50 left-70 w-1/3 h-10 rounded-md pl-2"
+        class="top-50 left-70 w-1/3 h-10 rounded-md pl-2 w-116"
+        v-model="search"
       />
     </div>
-    <div
-      class="flowers_wrapper flex flex-wrap"
-      :style="{ border: 'solid gold 2px' }"
-    >
-      <div
-        v-for="flower in flowers"
-        :key="flower.id"
-        :style="{ border: 'solid red 1px' }"
-      >
+    <div class="flowers_wrapper flex flex-wrap justify-between mt-20">
+      <div class="relative" v-for="flower in flowers" :key="flower.id">
         <img
           :src="`${flower.profile_picture}`"
           alt="flower background"
-          class="h-11/12 w-67 m-2 ml-6"
+          class="h-60 w-55 mt-2"
         />
+
+        <p
+          class="text-xl text-white absolute bottom-12 w-full text-center antialiased"
+        >
+          {{ flower.name }}
+        </p>
+        <p
+          class="text-l text-light-100 stroke-dark-50 absolute bottom-7 w-full text-center truncate"
+        >
+          {{ flower.latin_name }}
+        </p>
+        <div class="flex w-full justify-center">
+          <button
+            class="absolute bottom-1 text-center px-4 text-sm bg-gray-200 hover:bg-gray-300 border border-transparent rounded-xl w-30 h-6"
+          >
+            {{ flower.sightings }} sightings
+          </button>
+        </div>
       </div>
     </div>
   </div>

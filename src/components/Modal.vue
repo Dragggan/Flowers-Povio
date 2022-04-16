@@ -151,7 +151,7 @@ const modal = modalStore();
 const form = formStore();
 
 // is modal open/closed
-const isOpen = ref(true);
+const isOpen = ref(false);
 
 // headline of the modal
 const headline = computed(() => {
