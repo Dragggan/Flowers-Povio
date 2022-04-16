@@ -2,18 +2,19 @@
 import { RouterLink, RouterView } from "vue-router";
 import { onMounted } from "vue";
 import { modalStore } from "./stores/modal";
-import { storeToRefs } from "pinia";
 import { authStore } from "./stores/authStore";
 import Modal from "@/components/Modal.vue";
 
 const auth = authStore();
-const { tokenGetter } = storeToRefs(auth);
 
-const openModal = (): void => {
+// open modal and set type of modal
+const openModal = (type: string): void => {
   let isModalOpen = modalStore();
-  isModalOpen.isModalOpen();
+  isModalOpen.typeOfModal(type);
+  isModalOpen.isModalOpen(type);
 };
 
+// copy token from local storage if exist
 onMounted(() => {
   let token: string | null = localStorage.getItem("token");
   if (token) {
@@ -40,20 +41,15 @@ onMounted(() => {
       <RouterLink to="/favorites"
         ><span class="font-color mx-3">Favorites</span></RouterLink
       >
-      <button
-        v-if="!tokenGetter"
-        class="text-pink-button mx-3"
-        @click="openModal()"
-      >
+      <button class="text-pink-button mx-3" @click="openModal('loginModal')">
         Login
       </button>
       <button
-        v-if="!tokenGetter"
+        @click="openModal('createAccountModal')"
         class="bg-pink-button hover:pink-button-hover text-white rounded-2xl py-2 px-4 mx-3"
       >
         New Account
       </button>
-      <div v-else></div>
     </div>
   </nav>
   <RouterView />

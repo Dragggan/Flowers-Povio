@@ -1,19 +1,33 @@
 import { defineStore } from "pinia";
 
+interface modalStore {
+  createAccountModal: boolean;
+  loginModal: boolean;
+  modalType: string;
+}
+
 export const modalStore = defineStore({
   id: "modal",
-  state: () => ({
-    modal: false,
+  state: (): modalStore => ({
+    createAccountModal: false,
+    loginModal: false,
+    modalType: "",
   }),
   getters: {
-    // doubleCount: (state) => state.counter * 2,
+    modalTypeGetter: (state) => state.modalType,
   },
   actions: {
-    isModalOpen() {
-      this.modal = !this.modal;
+    typeOfModal(type: string) {
+      console.log("%c  type==> ", "color:red;font-size:12px;", type);
+      this.modalType = type;
+    },
+    isModalOpen(type: string) {
+      console.log("%c  type==> ", "color:red;font-size:12px;", type);
+      this[type] = !this[type];
     },
     isModalClosed() {
-      this.modal = false;
+      this.loginModal = false;
+      this.createAccountModal = false;
     },
   },
 });

@@ -13,7 +13,7 @@ export const authStore = defineStore({
     tokenGetter: (state) => state.token,
   },
   actions: {
-    settokentest(data: string | null) {
+    setToken(data: string | null) {
       this.token = data;
     },
     setTokenFromLocalStorage(data: string | null) {

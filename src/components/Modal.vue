@@ -35,7 +35,11 @@
               >
                 <span @click="closeModal" class="float-right mx-3">X</span>
                 <div class="my-4 text-center">
-                  {{ form.tokenGetter ? "Welcome Back" : "Create an Account" }}
+                  {{
+                    modal.modalTypeGetter === "loginModal"
+                      ? "Welcome Back"
+                      : "Create an Account"
+                  }}
                 </div>
               </DialogTitle>
               <form class="w-full max-w-lg">
@@ -47,7 +51,7 @@
                       type="text"
                       placeholder=" First Name"
                       v-model="form.name"
-                      v-if="!form.tokenGetter"
+                      v-if="modal.modalTypeGetter !== 'loginModal'"
                     />
                   </div>
                   <div class="w-full md:w-1/2 px-3">
@@ -57,7 +61,7 @@
                       type="text"
                       placeholder="Last Name"
                       v-model="form.lastname"
-                      v-if="!form.tokenGetter"
+                      v-if="modal.modalTypeGetter !== 'loginModal'"
                     />
                   </div>
                 </div>
@@ -69,11 +73,10 @@
                       type="date"
                       placeholder="Date of birth"
                       v-model="form.date"
-                      v-if="!form.tokenGetter"
+                      v-if="modal.modalTypeGetter !== 'loginModal'"
                     />
                     <p class="text-gray-600 text-xs italic"></p>
                   </div>
-
                   <div class="w-full px-3">
                     <input
                       class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -96,17 +99,16 @@
                   </div>
                 </div>
               </form>
-
               <div class="mt-4">
                 <button
                   :disabled="isDisabled"
                   type="button"
                   class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
                   :class="{ 'bg-gray-200': isDisabled }"
-                  @click="createAccount"
+                  @click="createAccount('createAccountModal')"
                 >
                   {{
-                    form.tokenGetter
+                    modal.modalTypeGetter === "loginModal"
                       ? "Login to your Account"
                       : "Create Account"
                   }}
@@ -131,15 +133,16 @@ import {
 } from "@headlessui/vue";
 import { modalStore } from "../stores/modal.ts";
 import { formStore } from "../stores/formStore.ts";
+import { authStore } from "../stores/authStore.ts";
 
-// two store connecting
-const store = modalStore();
+// stores connecting
+const modal = modalStore();
 const form = formStore();
 
 // is modal open/closed
-const isOpen = ref(true);
+const isOpen = ref(false);
 
-// all fields are disabled
+// all fields are mandatory
 const isDisabled = computed(() => {
   // const { name, lastname, password, email, date } = form;
   // return !(name && lastname && password && email && date);
@@ -147,18 +150,21 @@ const isDisabled = computed(() => {
 });
 
 // subscribing to the store for show/hide modal
-store.$subscribe((mutation, state) => {
-  isOpen.value = mutation.events.target.modal;
+modal.$subscribe((mutation, state) => {
+  if (localStorage.getItem("token")) {
+    isOpen.value = mutation.events.target.loginModal;
+  }
+  isOpen.value = mutation.events.target.createAccountModal;
 });
 
-function closeModal() {
+const closeModal = () => {
   isOpen.value = false;
-  store.isModalClosed();
-}
+  // modal.isModalClosed();
+};
 
-function createAccount() {
-  isOpen.value = false;
-  store.isModalClosed();
-  form.createAccount();
-}
+const createAccount = (type) => {
+  // isOpen.value = false;
+  // modal.isModalClosed();
+  form.createAccount(type);
+};
 </script>
