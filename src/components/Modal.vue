@@ -39,14 +39,10 @@
                   >X</span
                 >
                 <div class="my-4 text-center">
-                  {{
-                    modal.modalTypeGetter === "loginModal"
-                      ? "Welcome Back"
-                      : "Create an Account"
-                  }}
+                  {{ headline }}
                 </div>
               </DialogTitle>
-              <!-- ============================================================================================ -->
+              <!-- ==2========================================================================================== -->
               <!-- ==================== form modal ============================================================ -->
               <form
                 class="w-full max-w-lg"
@@ -109,32 +105,25 @@
                 </div>
               </form>
               <div class="mt-4">
-                <button
-                  v-if="modal.modalTypeGetter !== 'profileModal'"
-                  :disabled="isDisabled"
-                  type="button"
-                  class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
-                  :class="{ 'bg-gray-200': isDisabled }"
-                  @click="confirm(modal.modalTypeGetter)"
-                >
-                  {{
-                    modal.modalTypeGetter === "loginModal"
-                      ? "Login to your Account"
-                      : "Create Account"
-                  }}
-                </button>
+                <ConfirmButton />
               </div>
               <!-- ============================================================================================================= -->
               <!-- =======================================================Profile modal ======================================== -->
-              <div v-if="modal.modalTypeGetter === 'profileModal'">
-                <h1 text-4xl>profileModal</h1>
-                <button
-                  type="button"
-                  class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
-                  @click="logout()"
-                >
-                  {{ Logout }}
-                </button>
+              <div class="p-6" v-if="modal.modalTypeGetter === 'profileModal'">
+                <div class="flex content-center items-center">
+                  <img
+                    src="../assets/images/profilmock.png"
+                    alt="profil image fake"
+                  />
+                  <h1 class="ml-2 text-xl">Michael Berry</h1>
+                </div>
+                <p class="text-xs mt-4">First Name</p>
+                <h2 class="text-lg mb-3">Michael</h2>
+                <p class="text-xs">First Name</p>
+                <h2 class="text-lg mb-3">Berry</h2>
+                <p class="text-xs">Email Address</p>
+                <h2 class="text-lg mb-3">michael.berry@gmail.com</h2>
+                <ConfirmButton />
               </div>
             </div>
           </TransitionChild>
@@ -162,20 +151,20 @@ const modal = modalStore();
 const form = formStore();
 
 // is modal open/closed
-const isOpen = ref(false);
+const isOpen = ref(true);
 
-// all fields are mandatory
-const isDisabled = computed(() => {
-  // const { name, lastname, password, email, date } = form;
-  // return !(name && lastname && password && email && date);
-  return false;
+// headline of the modal
+const headline = computed(() => {
+  const headline = {
+    loginModal: "Welcome Back",
+    createAccountModal: "Create an Account",
+    profileModal: null,
+  };
+  return headline[modal.modalTypeGetter];
 });
 
 // subscribing to the store for show/hide modal
 modal.$subscribe((mutation) => {
-  // if (localStorage.getItem("token")) {
-  //   isOpen.value = mutation.events.target.loginModal;
-  // }
   let openModal = Boolean(
     mutation.events.target.createAccountModal ||
       mutation.events.target.loginModal ||
@@ -189,12 +178,5 @@ const closeModal = () => {
   modal.isModalClosed();
 };
 
-const confirm = (type) => {
-  form.createAccount(type);
-  // if (type === "loginModal") {
-  //   isOpen.value = false;
-  //   modal.isModalClosed(type);
-  // }
-};
 const logout = () => localStorage.clear();
 </script>
