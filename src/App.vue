@@ -8,10 +8,10 @@ import Modal from "@/components/Modal.vue";
 const auth = authStore();
 
 // open modal and set type of modal
-const openModal = (type: string): void => {
+const openModal = (type: string, value: boolean): void => {
   let isModalOpen = modalStore();
   isModalOpen.typeOfModal(type);
-  isModalOpen.isModalOpen(type);
+  isModalOpen.isModalOpen(type, value);
 };
 
 // copy token from local storage if exist
@@ -41,11 +41,14 @@ onMounted(() => {
       <RouterLink to="/favorites"
         ><span class="font-color mx-3">Favorites</span></RouterLink
       >
-      <button class="text-pink-button mx-3" @click="openModal('loginModal')">
+      <button
+        class="text-pink-button mx-3"
+        @click="openModal('loginModal', true)"
+      >
         Login
       </button>
       <button
-        @click="openModal('createAccountModal')"
+        @click="openModal('createAccountModal', true)"
         class="bg-pink-button hover:pink-button-hover text-white rounded-2xl py-2 px-4 mx-3"
       >
         New Account

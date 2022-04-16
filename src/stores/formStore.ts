@@ -1,3 +1,4 @@
+import { modalStore } from "./modal";
 import { defineStore } from "pinia";
 import { authStore } from "../stores/authStore";
 import axios, { type AxiosResponse } from "axios";
@@ -31,11 +32,15 @@ export const formStore = defineStore({
             }
           );
           const auth = authStore();
+          const modal = modalStore();
           auth.setToken(response?.data.auth_token);
           localStorage.setItem("token", response?.data.auth_token);
           alert(
             "Congratulations! You have successfully signed up for FlowrSpot!"
           );
+          modal.typeOfModal("loginModal");
+          modal.isModalOpen("createAccountModal", false);
+          modal.isModalOpen("loginModal", true);
         }
         // --------------login --------------------------
         else if (type === "loginModal") {
@@ -46,6 +51,7 @@ export const formStore = defineStore({
               password: this.password,
             }
           );
+          debugger; // eslint-disable-line no-debugger
           alert(
             "Congratulations! You have successfully logged into FlowrSpot!"
           );

@@ -33,7 +33,11 @@
                 as="h3"
                 class="text-lg font-medium leading-6 text-gray-900"
               >
-                <span @click="closeModal" class="float-right mx-3">X</span>
+                <span
+                  @click="closeModal"
+                  class="float-right mx-3 hover:cursor-pointer"
+                  >X</span
+                >
                 <div class="my-4 text-center">
                   {{
                     modal.modalTypeGetter === "loginModal"
@@ -105,7 +109,7 @@
                   type="button"
                   class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
                   :class="{ 'bg-gray-200': isDisabled }"
-                  @click="createAccount('createAccountModal')"
+                  @click="confirm(modal.modalTypeGetter)"
                 >
                   {{
                     modal.modalTypeGetter === "loginModal"
@@ -150,21 +154,27 @@ const isDisabled = computed(() => {
 });
 
 // subscribing to the store for show/hide modal
-modal.$subscribe((mutation, state) => {
-  if (localStorage.getItem("token")) {
-    isOpen.value = mutation.events.target.loginModal;
-  }
-  isOpen.value = mutation.events.target.createAccountModal;
+modal.$subscribe((mutation) => {
+  // if (localStorage.getItem("token")) {
+  //   isOpen.value = mutation.events.target.loginModal;
+  // }
+  let openModal = Boolean(
+    mutation.events.target.createAccountModal ||
+      mutation.events.target.loginModal
+  );
+  isOpen.value = openModal;
 });
 
 const closeModal = () => {
   isOpen.value = false;
-  // modal.isModalClosed();
+  modal.isModalClosed();
 };
 
-const createAccount = (type) => {
-  // isOpen.value = false;
-  // modal.isModalClosed();
+const confirm = (type) => {
   form.createAccount(type);
+  if (type === "loginModal") {
+    isOpen.value = false;
+    modal.isModalClosed(type);
+  }
 };
 </script>

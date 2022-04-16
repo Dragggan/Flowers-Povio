@@ -18,12 +18,10 @@ export const modalStore = defineStore({
   },
   actions: {
     typeOfModal(type: string) {
-      console.log("%c  type==> ", "color:red;font-size:12px;", type);
       this.modalType = type;
     },
-    isModalOpen(type: string) {
-      console.log("%c  type==> ", "color:red;font-size:12px;", type);
-      this[type] = !this[type];
+    isModalOpen(type: string, value: boolean) {
+      this[type] = value;
     },
     isModalClosed() {
       this.loginModal = false;
