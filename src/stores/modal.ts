@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 interface modalStore {
   createAccountModal: boolean;
   loginModal: boolean;
+  profileModal: boolean;
   modalType: string;
 }
 
@@ -11,6 +12,7 @@ export const modalStore = defineStore({
   state: (): modalStore => ({
     createAccountModal: false,
     loginModal: false,
+    profileModal: false,
     modalType: "",
   }),
   getters: {
@@ -26,6 +28,7 @@ export const modalStore = defineStore({
     isModalClosed() {
       this.loginModal = false;
       this.createAccountModal = false;
+      this.profileModal = false;
     },
   },
 });

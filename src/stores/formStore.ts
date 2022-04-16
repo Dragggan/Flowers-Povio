@@ -12,12 +12,14 @@ export const formStore = defineStore({
     email: "",
     password: "",
     error: "",
-    // token: "",
   }),
   getters: {},
   actions: {
     async createAccount(type: string) {
       let response: AxiosResponse<any, any> | undefined;
+      const auth = authStore();
+      const modal = modalStore();
+
       try {
         // ---------------------register --------------------
         if (type === "createAccountModal") {
@@ -31,8 +33,7 @@ export const formStore = defineStore({
               date_of_birth: this.date,
             }
           );
-          const auth = authStore();
-          const modal = modalStore();
+
           auth.setToken(response?.data.auth_token);
           localStorage.setItem("token", response?.data.auth_token);
           alert(
@@ -51,10 +52,15 @@ export const formStore = defineStore({
               password: this.password,
             }
           );
-          debugger; // eslint-disable-line no-debugger
           alert(
             "Congratulations! You have successfully logged into FlowrSpot!"
           );
+          localStorage.removeItem("token");
+          localStorage.setItem("token", response?.data.auth_token);
+          localStorage.setItem("isLogedIn", "true");
+          modal.typeOfModal("profileModal");
+          modal.isModalOpen("loginModal", false);
+          modal.isModalOpen("profileModal", true);
         }
       } catch (error) {
         this.error = error as string;

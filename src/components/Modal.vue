@@ -46,7 +46,12 @@
                   }}
                 </div>
               </DialogTitle>
-              <form class="w-full max-w-lg">
+              <!-- ============================================================================================ -->
+              <!-- ==================== form modal ============================================================ -->
+              <form
+                class="w-full max-w-lg"
+                v-if="modal.modalTypeGetter !== 'profileModal'"
+              >
                 <div class="flex flex-wrap -mx-3 mb-6">
                   <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <input
@@ -105,6 +110,7 @@
               </form>
               <div class="mt-4">
                 <button
+                  v-if="modal.modalTypeGetter !== 'profileModal'"
                   :disabled="isDisabled"
                   type="button"
                   class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
@@ -116,6 +122,18 @@
                       ? "Login to your Account"
                       : "Create Account"
                   }}
+                </button>
+              </div>
+              <!-- ============================================================================================================= -->
+              <!-- =======================================================Profile modal ======================================== -->
+              <div v-if="modal.modalTypeGetter === 'profileModal'">
+                <h1 text-4xl>profileModal</h1>
+                <button
+                  type="button"
+                  class="w-full justify-center px-4 py-2 text-sm font-medium text-white bg-pink-button border border-transparent rounded-md focus:outline-none focus-visible:ring-2"
+                  @click="logout()"
+                >
+                  {{ Logout }}
                 </button>
               </div>
             </div>
@@ -160,7 +178,8 @@ modal.$subscribe((mutation) => {
   // }
   let openModal = Boolean(
     mutation.events.target.createAccountModal ||
-      mutation.events.target.loginModal
+      mutation.events.target.loginModal ||
+      mutation.events.target.profileModal
   );
   isOpen.value = openModal;
 });
@@ -172,9 +191,10 @@ const closeModal = () => {
 
 const confirm = (type) => {
   form.createAccount(type);
-  if (type === "loginModal") {
-    isOpen.value = false;
-    modal.isModalClosed(type);
-  }
+  // if (type === "loginModal") {
+  //   isOpen.value = false;
+  //   modal.isModalClosed(type);
+  // }
 };
+const logout = () => localStorage.clear();
 </script>
