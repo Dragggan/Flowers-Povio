@@ -15,14 +15,18 @@ const openModal = (type: string, value: boolean): void => {
 };
 
 const isLoginUser = computed(() => {
-  return !localStorage.getItem("isLogedIn");
+  return auth.isLogedIn;
 });
 
-// copy token from local storage if exist
+// copy token from local storage if exist, flag to determine if the user logged in
 onMounted(() => {
   let token: string | null = localStorage.getItem("token");
+  let isLogedIn: string | null = localStorage.getItem("isLogedIn");
   if (token) {
-    auth.setTokenFromLocalStorage(token);
+    auth.setToken(token);
+  }
+  if (isLogedIn) {
+    auth.setIsLogedIn(isLogedIn);
   }
 });
 </script>
@@ -46,20 +50,24 @@ onMounted(() => {
         ><span class="font-color mx-3">Favorites</span></RouterLink
       >
       <button
-        v-if="isLoginUser"
-        class="text-pink-button mx-3"
+        v-if="!isLoginUser"
+        class="text-pink-button mx-3 hover:text-pink-button-hover"
         @click="openModal('loginModal', true)"
       >
         Login
       </button>
-      <div class="flex items-center" v-else>
+      <div
+        class="flex items-center hover:cursor-pointer"
+        v-else
+        @click="openModal('profileModal', true)"
+      >
         <p class="mr-1">Jon Doe</p>
         <img class="" src="./assets/images/avatar.png" alt="avatar of user" />
       </div>
       <button
-        v-if="isLoginUser"
+        v-if="!isLoginUser"
         @click="openModal('createAccountModal', true)"
-        class="bg-pink-button hover:pink-button-hover text-white rounded-2xl py-2 px-4 mx-3"
+        class="bg-pink-button hover:bg-pink-button-hover text-white rounded-2xl py-2 px-4 mx-3"
       >
         New Account
       </button>

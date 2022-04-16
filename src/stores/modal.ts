@@ -23,7 +23,7 @@ export const modalStore = defineStore({
       this.modalType = type;
     },
     isModalOpen(type: string, value: boolean) {
-      this[index] = value;
+      this[type] = value;
     },
     isModalClosed() {
       this.loginModal = false;

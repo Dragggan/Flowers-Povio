@@ -3,23 +3,35 @@ import { defineStore } from "pinia";
 import { authStore } from "../stores/authStore";
 import axios, { type AxiosResponse } from "axios";
 
+interface FormStore {
+  name: string;
+  lastname: string;
+  date: string;
+  email: string;
+  password: string;
+  error: string;
+  loading: boolean;
+}
+
 export const formStore = defineStore({
   id: "formStore",
-  state: () => ({
+  state: (): FormStore => ({
     name: "",
     lastname: "",
     date: "",
     email: "",
     password: "",
     error: "",
+    loading: false,
   }),
   actions: {
-    async createAccount(type: string) {
+    async setAccount(type: string) {
       let response: AxiosResponse<any, any> | undefined;
       const auth = authStore();
       const modal = modalStore();
 
       try {
+        this.loading = true;
         // ---------------------register --------------------
         if (type === "createAccountModal") {
           response = await axios.post(
@@ -58,13 +70,29 @@ export const formStore = defineStore({
           localStorage.removeItem("token");
           localStorage.setItem("token", response?.data.auth_token);
           localStorage.setItem("isLogedIn", "true");
+
+          auth.setToken(response?.data.auth_token);
+          auth.setIsLogedIn(true);
+
           modal.typeOfModal("profileModal");
           modal.isModalOpen("loginModal", false);
           modal.isModalOpen("profileModal", true);
+          this.clearStore();
         }
-      } catch (error) {
-        this.error = error as string;
+      } catch (er) {
+        alert(er.response.data.error);
+        this.error = er.response.data.error as string;
+      } finally {
+        this.loading = false;
       }
+    },
+    clearStore() {
+      this.name = "";
+      this.lastname = "";
+      this.date = "";
+      this.email = "";
+      this.password = "";
+      this.error = "";
     },
   },
 });

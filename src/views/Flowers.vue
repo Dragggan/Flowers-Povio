@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { flowersStore } from "../stores/flowers";
+import { authStore } from "../stores/authStore.ts";
 import { storeToRefs } from "pinia";
 import Spinner from "@/components/Spinner.vue";
 
-const { flowers, loading, error, searchFlowers } = storeToRefs(flowersStore());
+const { flowers, loading, error } = storeToRefs(flowersStore());
+const auth = authStore();
 
+// watching for flower search
 const search = ref("");
-
-// subscribing to the store for flower search
 let flower = flowersStore();
+
+const setAsFavorite = (flower_id) => {
+  flower.setAsFavorite(flower_id);
+};
 
 watch(
   () => search.value,
@@ -17,13 +22,6 @@ watch(
     flower.flowerSearch(search.value);
   }
 );
-
-// flower.$subscribe((mutation) => {
-//   let searchForFlowers = mutation.events.target.searchFlowers;
-//   if (searchForFlowers) {
-
-//   }
-// });
 
 //  Hooks
 onMounted(async () => {
@@ -53,27 +51,41 @@ onMounted(async () => {
         v-model="search"
       />
     </div>
-    <div class="flowers_wrapper flex flex-wrap justify-between mt-20">
-      <div class="relative" v-for="flower in flowers" :key="flower.id">
+    <div
+      class="flowers_wrapper flex flex-wrap mt-20"
+      :class="{ 'justify-between': flowers.length >= 4 }"
+    >
+      <div
+        class="relative"
+        :class="{ 'mr-6': flowers.length < 4 }"
+        v-for="flower in flowers"
+        :key="flower.id"
+      >
         <img
           :src="`${flower.profile_picture}`"
           alt="flower background"
-          class="h-60 w-55 mt-2"
+          class="h-60 w-55 mt-2 mb-6"
         />
-
+        <img
+          src="../assets/images/star.png"
+          v-if="auth.isLogedIn"
+          alt="favorite star"
+          class="absolute top-3 right-2 cursor-pointer"
+          @click="setAsFavorite(flower.id)"
+        />
         <p
-          class="text-xl text-white absolute bottom-12 w-full text-center antialiased"
+          class="text-xl text-white absolute bottom-22 w-full text-center antialiased"
         >
           {{ flower.name }}
         </p>
         <p
-          class="text-l text-light-100 stroke-dark-50 absolute bottom-7 w-full text-center truncate"
+          class="text-l text-light-100 stroke-dark-50 absolute bottom-17 w-full text-center truncate"
         >
           {{ flower.latin_name }}
         </p>
         <div class="flex w-full justify-center">
           <button
-            class="absolute bottom-1 text-center px-4 text-sm bg-gray-200 hover:bg-gray-300 border border-transparent rounded-xl w-30 h-6"
+            class="absolute bottom-8 text-center px-4 text-sm bg-gray-200 hover:bg-gray-300 border border-transparent rounded-xl w-30 h-6"
           >
             {{ flower.sightings }} sightings
           </button>

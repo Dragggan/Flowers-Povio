@@ -80,7 +80,6 @@
                       v-model="form.date"
                       v-if="modal.modalTypeGetter !== 'loginModal'"
                     />
-                    <p class="text-gray-600 text-xs italic"></p>
                   </div>
                   <div class="w-full px-3">
                     <input
@@ -105,7 +104,9 @@
                 </div>
               </form>
               <div class="mt-4">
-                <ConfirmButton />
+                <ConfirmButton
+                  v-if="modal.modalTypeGetter !== 'profileModal'"
+                />
               </div>
               <!-- ============================================================================================================= -->
               <!-- =======================================================Profile modal ======================================== -->
@@ -144,6 +145,7 @@ import {
 } from "@headlessui/vue";
 import { modalStore } from "../stores/modal.ts";
 import { formStore } from "../stores/formStore.ts";
+import ConfirmButton from "@/components/ConfirmButton.vue";
 
 // stores connecting
 const modal = modalStore();
