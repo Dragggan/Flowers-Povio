@@ -144,7 +144,6 @@ import {
 } from "@headlessui/vue";
 import { modalStore } from "../stores/modal.ts";
 import { formStore } from "../stores/formStore.ts";
-import { authStore } from "../stores/authStore.ts";
 
 // stores connecting
 const modal = modalStore();
@@ -177,6 +176,4 @@ const closeModal = () => {
   isOpen.value = false;
   modal.isModalClosed();
 };
-
-const logout = () => localStorage.clear();
 </script>

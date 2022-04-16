@@ -30,9 +30,8 @@ const headline = computed(() => {
 
 // all fields are mandatory
 const isDisabled = computed(() => {
-  // const { name, lastname, password, email, date } = form;
-  // return !(name && lastname && password && email && date);
-  return false;
+  const { name, lastname, password, email, date } = form;
+  return !(name && lastname && password && email && date);
 });
 
 // create/login/logut button

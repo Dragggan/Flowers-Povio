@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 interface FlowersApi {
   flowers: [] | null;
@@ -21,24 +21,22 @@ export const flowersStore = defineStore({
   },
   actions: {
     async getFlowers() {
-      let response;
+      let response: AxiosResponse<any, any> | undefined;
       try {
         this.loading = true;
-        // searching for flowers
-
-        // without search, all flowers
         response = await axios.get(
           `${import.meta.env.VITE_BASIC_PATH}/flowers`
         );
-        this.flowers = response.data.flowers;
+        this.flowers = response?.data.flowers;
       } catch (error) {
         this.error = error as string;
       } finally {
         this.loading = false;
       }
     },
+
     async flowerSearch(value: string) {
-      let response;
+      let response: AxiosResponse<any, any> | undefined;
       try {
         this.loading = true;
         response = await axios.get(
@@ -46,7 +44,7 @@ export const flowersStore = defineStore({
           { params: { query: value } }
         );
         this.flowers = [];
-        this.flowers = response.data.flowers;
+        this.flowers = response?.data.flowers;
       } catch (error) {
         this.error = error as string;
       } finally {

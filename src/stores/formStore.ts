@@ -13,7 +13,6 @@ export const formStore = defineStore({
     password: "",
     error: "",
   }),
-  getters: {},
   actions: {
     async createAccount(type: string) {
       let response: AxiosResponse<any, any> | undefined;
@@ -55,6 +54,7 @@ export const formStore = defineStore({
           alert(
             "Congratulations! You have successfully logged into FlowrSpot!"
           );
+          // replacing token
           localStorage.removeItem("token");
           localStorage.setItem("token", response?.data.auth_token);
           localStorage.setItem("isLogedIn", "true");
